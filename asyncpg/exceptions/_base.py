@@ -9,6 +9,8 @@ import asyncpg
 import sys
 import textwrap
 
+from pgbase import exceptions as pgbase_errors
+
 
 __all__ = ('PostgresError', 'FatalPostgresError', 'UnknownPostgresError',
            'InterfaceError', 'InterfaceWarning', 'PostgresLogMessage',
@@ -221,8 +223,7 @@ class InterfaceWarning(InterfaceMessage, UserWarning):
         UserWarning.__init__(self, msg)
 
 
-class InternalClientError(Exception):
-    """All unexpected errors not classified otherwise."""
+InternalClientError = pgbase_errors.InternalClientError
 
 
 class ProtocolError(InternalClientError):

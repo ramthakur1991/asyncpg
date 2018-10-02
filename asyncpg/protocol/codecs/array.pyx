@@ -408,7 +408,7 @@ cdef textarray_decode(ConnectionSettings settings, FastReadBuffer buf,
 
     # Make a copy of array data since we will be mutating it for
     # the purposes of element decoding.
-    s = text_decode(settings, buf)
+    s = pgbase.text_decode(settings, buf)
     array_text = PyUnicode_AsUCS4Copy(s)
 
     try:
@@ -637,7 +637,7 @@ cdef _textarray_decode(ConnectionSettings settings,
 
             # Prepare the element buffer and call the text decoder
             # for the element type.
-            as_pg_string_and_size(
+            pgbase.as_pg_string_and_size(
                 settings, item_text, &pg_item_str, &pg_item_len)
             item_buf.buf = pg_item_str
             item_buf.len = pg_item_len
@@ -812,12 +812,12 @@ cdef _infer_array_dims(const Py_UCS4 *array_text,
 
 cdef uint4_encode_ex(ConnectionSettings settings, WriteBuffer buf, object obj,
                      const void *arg):
-    return uint4_encode(settings, buf, obj)
+    return pgbase.uint4_encode(settings, buf, obj)
 
 
 cdef uint4_decode_ex(ConnectionSettings settings, FastReadBuffer buf,
                      const void *arg):
-    return uint4_decode(settings, buf)
+    return pgbase.uint4_decode(settings, buf)
 
 
 cdef arrayoid_encode(ConnectionSettings settings, WriteBuffer buf, items):
@@ -831,12 +831,12 @@ cdef arrayoid_decode(ConnectionSettings settings, FastReadBuffer buf):
 
 cdef text_encode_ex(ConnectionSettings settings, WriteBuffer buf, object obj,
                     const void *arg):
-    return text_encode(settings, buf, obj)
+    return pgbase.text_encode(settings, buf, obj)
 
 
 cdef text_decode_ex(ConnectionSettings settings, FastReadBuffer buf,
                     const void *arg):
-    return text_decode(settings, buf)
+    return pgbase.text_decode(settings, buf)
 
 
 cdef arraytext_encode(ConnectionSettings settings, WriteBuffer buf, items):

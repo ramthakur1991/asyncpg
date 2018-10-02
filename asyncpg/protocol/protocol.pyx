@@ -18,6 +18,15 @@ import socket
 import time
 import weakref
 
+from pgbase.proto cimport (
+    WriteBuffer,
+    ReadBuffer,
+    FastReadBuffer,
+    Memory,
+)
+
+from pgbase cimport proto as pgbase
+
 from libc.stdint cimport int8_t, uint8_t, int16_t, uint16_t, \
                          int32_t, uint32_t, int64_t, uint64_t, \
                          INT16_MIN, INT16_MAX, INT32_MIN, INT32_MAX, \
@@ -49,7 +58,6 @@ include "pgtypes.pxi"
 
 include "encodings.pyx"
 include "settings.pyx"
-include "buffer.pyx"
 
 include "codecs/base.pyx"
 include "codecs/textutils.pyx"

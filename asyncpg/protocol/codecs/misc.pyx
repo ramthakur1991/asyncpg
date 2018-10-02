@@ -5,28 +5,17 @@
 # the Apache 2.0 License: http://www.apache.org/licenses/LICENSE-2.0
 
 
-cdef void_encode(ConnectionSettings settings, WriteBuffer buf, obj):
-    # Void is zero bytes
-    buf.write_int32(0)
-
-
-cdef void_decode(ConnectionSettings settings, FastReadBuffer buf):
-    # Do nothing; void will be passed as NULL so this function
-    # will never be called.
-    pass
-
-
 cdef init_pseudo_codecs():
     # Void type is returned by SELECT void_returning_function()
     register_core_codec(VOIDOID,
-                        <encode_func>&void_encode,
-                        <decode_func>&void_decode,
+                        <encode_func>pgbase.void_encode,
+                        <decode_func>pgbase.void_decode,
                         PG_FORMAT_BINARY)
 
     # Unknown type, always decoded as text
     register_core_codec(UNKNOWNOID,
-                        <encode_func>&text_encode,
-                        <decode_func>&text_decode,
+                        <encode_func>pgbase.text_encode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
     # OID and friends
@@ -36,8 +25,8 @@ cdef init_pseudo_codecs():
 
     for oid_type in oid_types:
         register_core_codec(oid_type,
-                            <encode_func>&uint4_encode,
-                            <decode_func>&uint4_decode,
+                            <encode_func>pgbase.uint4_encode,
+                            <decode_func>pgbase.uint4_decode,
                             PG_FORMAT_BINARY)
 
     # reg* types -- these are really system catalog OIDs, but
@@ -53,14 +42,14 @@ cdef init_pseudo_codecs():
 
     for reg_type in reg_types:
         register_core_codec(reg_type,
-                            <encode_func>&text_encode,
-                            <decode_func>&text_decode,
+                            <encode_func>pgbase.text_encode,
+                            <decode_func>pgbase.text_decode,
                             PG_FORMAT_TEXT)
 
     # cstring type is used by Postgres' I/O functions
     register_core_codec(CSTRINGOID,
-                        <encode_func>&text_encode,
-                        <decode_func>&text_decode,
+                        <encode_func>pgbase.text_encode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_BINARY)
 
     # various system pseudotypes with no I/O
@@ -73,7 +62,7 @@ cdef init_pseudo_codecs():
 
     register_core_codec(ANYENUMOID,
                         NULL,
-                        <decode_func>&text_decode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
     for no_io_type in no_io_types:
@@ -84,37 +73,37 @@ cdef init_pseudo_codecs():
 
     # ACL specification string
     register_core_codec(ACLITEMOID,
-                        <encode_func>&text_encode,
-                        <decode_func>&text_decode,
+                        <encode_func>pgbase.text_encode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
     # Postgres' serialized expression tree type
     register_core_codec(PG_NODE_TREEOID,
                         NULL,
-                        <decode_func>&text_decode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
     # pg_lsn type -- a pointer to a location in the XLOG.
     register_core_codec(PG_LSNOID,
-                        <encode_func>&int8_encode,
-                        <decode_func>&int8_decode,
+                        <encode_func>pgbase.int8_encode,
+                        <decode_func>pgbase.int8_decode,
                         PG_FORMAT_BINARY)
 
     register_core_codec(SMGROID,
-                        <encode_func>&text_encode,
-                        <decode_func>&text_decode,
+                        <encode_func>pgbase.text_encode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
     # pg_dependencies and pg_ndistinct are special types
     # used in pg_statistic_ext columns.
     register_core_codec(PG_DEPENDENCIESOID,
-                        <encode_func>&text_encode,
-                        <decode_func>&text_decode,
+                        <encode_func>pgbase.text_encode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
     register_core_codec(PG_NDISTINCTOID,
-                        <encode_func>&text_encode,
-                        <decode_func>&text_decode,
+                        <encode_func>pgbase.text_encode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
 init_pseudo_codecs()

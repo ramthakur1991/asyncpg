@@ -12,8 +12,8 @@ cdef init_monetary_codecs():
 
     for oid in moneyoids:
         register_core_codec(oid,
-                            <encode_func>&text_encode,
-                            <decode_func>&text_decode,
+                            <encode_func>pgbase.text_encode,
+                            <decode_func>pgbase.text_decode,
                             PG_FORMAT_TEXT)
 
 

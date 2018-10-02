@@ -13,13 +13,13 @@ cdef init_tsearch_codecs():
 
     for oid in ts_oids:
         register_core_codec(oid,
-                            <encode_func>&text_encode,
-                            <decode_func>&text_decode,
+                            <encode_func>pgbase.text_encode,
+                            <decode_func>pgbase.text_decode,
                             PG_FORMAT_TEXT)
 
     register_core_codec(GTSVECTOROID,
                         NULL,
-                        <decode_func>&text_decode,
+                        <decode_func>pgbase.text_decode,
                         PG_FORMAT_TEXT)
 
 

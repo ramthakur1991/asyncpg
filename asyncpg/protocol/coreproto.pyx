@@ -370,7 +370,12 @@ cdef class CoreProtocol:
         cdef:
             ReadBuffer buf = self.buffer
             list rows
+
             decode_row_method decoder = <decode_row_method>self._decode_row
+            try_consume_message_method try_consume_message = \
+                <try_consume_message_method>buf.try_consume_message
+            take_message_type_method take_message_type = \
+                <take_message_type_method>buf.take_message_type
 
             const char* cbuf
             ssize_t cbuf_len
@@ -383,7 +388,7 @@ cdef class CoreProtocol:
                     '_parse_data_msgs: first message is not "D"')
 
         if self._discard_data:
-            while buf.take_message_type(b'D'):
+            while take_message_type(buf, b'D'):
                 buf.consume_message()
             return
 
@@ -394,8 +399,8 @@ cdef class CoreProtocol:
                     format(self.result))
 
         rows = self.result
-        while buf.take_message_type(b'D'):
-            cbuf = buf.try_consume_message(&cbuf_len)
+        while take_message_type(buf, b'D'):
+            cbuf = try_consume_message(buf, &cbuf_len)
             if cbuf != NULL:
                 row = decoder(self, cbuf, cbuf_len)
             else:

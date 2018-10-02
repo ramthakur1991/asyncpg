@@ -67,6 +67,8 @@ cdef enum TransactionStatus:
 
 
 ctypedef object (*decode_row_method)(object, const char*, ssize_t)
+ctypedef const char * (*try_consume_message_method)(object, ssize_t*)
+ctypedef int32_t (*take_message_type_method)(object, char) except -1
 
 
 cdef class CoreProtocol:

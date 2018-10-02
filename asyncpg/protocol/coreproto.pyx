@@ -335,10 +335,11 @@ cdef class CoreProtocol:
             object mview
             Py_buffer *pybuf
 
-        mview = PyMemoryView_GetContiguous(data, cpython.PyBUF_SIMPLE, b'C')
+        mview = cpythonx.PyMemoryView_GetContiguous(
+            data, cpython.PyBUF_SIMPLE, b'C')
 
         try:
-            pybuf = PyMemoryView_GET_BUFFER(mview)
+            pybuf = cpythonx.PyMemoryView_GET_BUFFER(mview)
 
             buf = WriteBuffer.new_message(b'd')
             buf.write_cstr(<const char *>pybuf.buf, pybuf.len)

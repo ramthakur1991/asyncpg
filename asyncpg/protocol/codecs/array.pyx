@@ -31,7 +31,7 @@ ctypedef object (*decode_func_ex)(ConnectionSettings settings,
 
 cdef inline bint _is_trivial_container(object obj):
     return cpython.PyUnicode_Check(obj) or cpython.PyBytes_Check(obj) or \
-            PyByteArray_Check(obj) or PyMemoryView_Check(obj)
+            cpythonx.PyByteArray_Check(obj) or cpythonx.PyMemoryView_Check(obj)
 
 
 cdef inline _is_array_iterable(object obj):
@@ -409,7 +409,7 @@ cdef textarray_decode(ConnectionSettings settings, FastReadBuffer buf,
     # Make a copy of array data since we will be mutating it for
     # the purposes of element decoding.
     s = pgbase.text_decode(settings, buf)
-    array_text = PyUnicode_AsUCS4Copy(s)
+    array_text = cpythonx.PyUnicode_AsUCS4Copy(s)
 
     try:
         return _textarray_decode(
@@ -418,7 +418,7 @@ cdef textarray_decode(ConnectionSettings settings, FastReadBuffer buf,
         raise exceptions.ProtocolError(
             'malformed array literal {!r}: {}'.format(s, e.args[0]))
     finally:
-        PyMem_Free(array_text)
+        cpython.PyMem_Free(array_text)
 
 
 cdef _textarray_decode(ConnectionSettings settings,
@@ -630,8 +630,8 @@ cdef _textarray_decode(ConnectionSettings settings,
         else:
             # XXX: find a way to avoid the redundant encode/decode
             # cycle here.
-            item_text = PyUnicode_FromKindAndData(
-                PyUnicode_4BYTE_KIND,
+            item_text = cpythonx.PyUnicode_FromKindAndData(
+                cpythonx.PyUnicode_4BYTE_KIND,
                 <void *>item_start,
                 item_end - item_start)
 

@@ -26,25 +26,12 @@ from pgbase.proto cimport (
 )
 
 from pgbase cimport proto as pgbase
+from asyncpg.protocol cimport cpythonx
+from asyncpg.protocol cimport record
 
 from libc.stdint cimport int8_t, uint8_t, int16_t, uint16_t, \
                          int32_t, uint32_t, int64_t, uint64_t, \
-                         INT16_MIN, INT16_MAX, INT32_MIN, INT32_MAX, \
-                         UINT32_MAX, INT64_MIN, INT64_MAX
-
-from asyncpg.protocol cimport record
-
-from asyncpg.protocol.python cimport (
-                     PyMem_Malloc, PyMem_Realloc, PyMem_Calloc, PyMem_Free,
-                     PyMemoryView_GET_BUFFER, PyMemoryView_Check,
-                     PyMemoryView_FromMemory, PyMemoryView_GetContiguous,
-                     PyUnicode_AsUTF8AndSize, PyByteArray_AsString,
-                     PyByteArray_Check, PyUnicode_AsUCS4Copy,
-                     PyByteArray_Size, PyByteArray_Resize,
-                     PyByteArray_FromStringAndSize,
-                     PyUnicode_FromKindAndData, PyUnicode_4BYTE_KIND)
-
-from cpython cimport PyBuffer_FillInfo, PyBytes_AsString
+                         UINT32_MAX
 
 from asyncpg.exceptions import _base as apg_exc_base
 from asyncpg import compat
@@ -62,36 +49,13 @@ include "settings.pyx"
 include "codecs/base.pyx"
 include "codecs/textutils.pyx"
 
-# String types.  Need to go first, as other codecs may rely on
-# text decoding/encoding.
-include "codecs/bytea.pyx"
-include "codecs/text.pyx"
-
-# Builtin types, in lexicographical order.
-include "codecs/bits.pyx"
-include "codecs/datetime.pyx"
-include "codecs/float.pyx"
-include "codecs/geometry.pyx"
-include "codecs/int.pyx"
-include "codecs/json.pyx"
-include "codecs/money.pyx"
-include "codecs/network.pyx"
-include "codecs/numeric.pyx"
-include "codecs/tid.pyx"
-include "codecs/tsearch.pyx"
-include "codecs/txid.pyx"
-include "codecs/uuid.pyx"
-
-# Various pseudotypes and system types
-include "codecs/misc.pyx"
+# register codecs provided by pgbase
+include "codecs/pgbase.pyx"
 
 # nonscalar
 include "codecs/array.pyx"
 include "codecs/range.pyx"
 include "codecs/record.pyx"
-
-# contrib
-include "codecs/hstore.pyx"
 
 include "coreproto.pyx"
 include "prepared_stmt.pyx"

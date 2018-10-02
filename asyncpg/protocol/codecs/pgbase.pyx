@@ -413,14 +413,10 @@ cdef init_monetary_codecs():
                             PG_FORMAT_TEXT)
 
 
-cdef init_pgbase_codecs():
-    # String types.  Need to go first, as other codecs may rely on
-    # text decoding/encoding.
-    init_bytea_codecs()
-    init_text_codecs()
-
+cdef init_all_pgbase_codecs():
     # Builtin types, in lexicographical order.
     init_bits_codecs()
+    init_bytea_codecs()
     init_datetime_codecs()
     init_float_codecs()
     init_geometry_codecs()
@@ -429,6 +425,7 @@ cdef init_pgbase_codecs():
     init_monetary_codecs()
     init_network_codecs()
     init_numeric_codecs()
+    init_text_codecs()
     init_tid_codecs()
     init_tsearch_codecs()
     init_txid_codecs()
@@ -441,4 +438,4 @@ cdef init_pgbase_codecs():
     init_hstore_codecs()
 
 
-init_pgbase_codecs()
+init_all_pgbase_codecs()
